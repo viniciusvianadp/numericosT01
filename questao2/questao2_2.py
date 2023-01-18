@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
-""" 
-Spyder Editor Spyder 3.2.3 
 
-# MAP5725 - Roma, 2023-01-03.
+# MAP5725
+# based on Roma's program.
 
 # general explicit one-Step methods and convergence tests implementation.
 
 # (manufactured) problem with kwnown exact solution 
-              y"-2y'+2y = (e^t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
+#              y"-2y'+2y = (e^t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
                          
-"""
 import math
 import numpy as np
+
 #############################################################################
 
 def phi(t, y, f):
@@ -21,7 +19,7 @@ def phi(t, y, f):
 ############################################################################
 
 def f(t, y):
-    
+    # bidimensional problem
     f0 =  y[1]
     f1 =  math.exp(2*t)*math.sin(t) - 2*y[0] + 2*y[1]
     
@@ -46,13 +44,18 @@ def oneStepMethod(t0, y0, T, n):
     return (T - t0) / n, y_n[-1]
 
 ############################################################################
+
 def ye(t):
     # exact solution 
     return 0.2*math.exp(2*t)*(math.sin(t) - 2*math.cos(t))
+
 ############################################################################
-############################################################################
+
 def main():
-    # input math model data
+    # obtains the numerical convergence table based on parameters such as
+    # inicial conditions, final time and number of steps
+
+    # input numerical model data
     t0=0; y0=[-0.4, -0.6];  # initial condition
     T=1             # final time
     
@@ -82,23 +85,7 @@ def main():
         
     print(" "); 
     
-    # verification of the order without using/knowing the exact solution
-    # convergence table to determine the behavior of the method for our problem    
+############################################################################
     
-    ## with open("behavior_convergence.txt", 'w', encoding='utf-8') as file2:
-    ##    file2.write("ORDER BEHAVIOR CONVERGENCE TABLE\n");
-    ##
-    ##    e=p=q=r=0;
-    ##    for i in range(1,m+1):
-    ##        n=16*2**(i-1); 
-    ##        if i>2:
-    ##            q = abs((yn[i-3][0]-yn[i-2][0])/(yn[i-2][0]-yn[i-1][0]));
-    ##            r = h[i-2]/h[i-1];
-    ##        
-    ##            p = math.log(q)/math.log(r);
-    ##        
-    ##            e = abs((yn[i-2][0]-yn[i-1][0]));
-    ##            #print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p)); 
-    ##            file2.write("{:5d} & {:9.3e} & {:9.3e} & {:9.3e}\\\\\n".format(n,h[i-1],e,p))       
 main()
 
