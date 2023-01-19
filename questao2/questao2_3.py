@@ -74,16 +74,17 @@ def main():
         
         # verification via manufactured solution stragegy
         # convergence table to verify the method correct implementation 
-        e=p=q=r=0;
+        p=q=r=0;
+        
+        e = abs(ye(T)-yn[i-1][0])
         if i>1:
             q = abs((ye(T)-yn[i-2][0])/(ye(T)-yn[i-1][0]));
             r = h[i-2]/h[i-1];
             
             p = math.log(q)/math.log(r);
-            
-            e = abs(ye(T)-yn[i-1][0])
-        print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p));
-        
+            print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p))
+        else: 
+            print("%5d & %9.3e & %9.3e & --------- \\\\" % (n,h[i-1],e))    
     print(" "); 
     
     # verification of the order without using/knowing the exact solution
