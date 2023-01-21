@@ -71,7 +71,7 @@ def main():
         
         h[i-1],yn[i-1]=oneStepMethod(t0,y0,T,n);
         
-        # verification via manufactured solution stragegy
+        # verification via manufactured solution strategy
         # convergence table to verify the method correct implementation 
         p=q=r=0;
         
