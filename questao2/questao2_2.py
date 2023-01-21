@@ -5,8 +5,9 @@
 # general explicit one-Step methods and convergence tests implementation.
 
 # (manufactured) problem with kwnown exact solution 
-#              y"-2y'+2y = (e^t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
-                         
+#            (1) I1' = -4I1 + 3I2 + 6, I1(0) = 0
+#            (2) I2' = -2.4I1 + 1.6I2 + 3.6, I2(0) = 0
+
 import math
 import numpy as np
 
@@ -20,8 +21,8 @@ def phi(t, y, f):
 
 def f(t, y):
     # bidimensional problem
-    f0 =  y[1]
-    f1 =  math.exp(2*t)*math.sin(t) - 2*y[0] + 2*y[1]
+    f0 = -4*y[0] + 3*y[1] + 6
+    f1 = -2.4*y[0] + 1.6*y[1] + 3.6
     
     return np.array([f0, f1])
 
@@ -45,18 +46,24 @@ def oneStepMethod(t0, y0, T, n):
 
 ############################################################################
 
-def ye(t):
+def ye1(t):
     # exact solution 
-    return 0.2*math.exp(2*t)*(math.sin(t) - 2*math.cos(t))
+    return -3.375*math.exp(-2*t) + 1.875*math.exp(-0.4*t) + 1.5
+
+############################################################################
+
+def ye2(t):
+    # exact solution
+    return -2.25*math.exp(-2*t) + 2.25*math.exp(-0.4*t)
 
 ############################################################################
 
 def main():
     # obtains the numerical convergence table based on parameters such as
     # inicial conditions, final time and number of steps
-
-    # input numerical model data
-    t0=0; y0=[-0.4, -0.6];  # initial condition
+    
+    # input math model data
+    t0=0; y0=[0, 0];  # initial condition
     T=1             # final time
     
     # input numerical method data
@@ -75,19 +82,18 @@ def main():
         # convergence table to verify the method correct implementation 
         p=q=r=0;
         
-        e = abs(ye(T)-yn[i-1][0])
+        e = max(abs(ye1(T)-yn[i-1][0]), abs(ye2(T)-yn[i-1][1]))
         if i>1:
-            q = abs((ye(T)-yn[i-2][0])/(ye(T)-yn[i-1][0]));
+            q = abs(max(abs(ye1(T)-yn[i-2][0]), abs(ye2(T)-yn[i-2][1]))/e)
             r = h[i-2]/h[i-1];
             
             p = math.log(q)/math.log(r);
             print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p))
         else: 
-            print("%5d & %9.3e & %9.3e & --------- \\\\" % (n,h[i-1],e))
-        
+            print("%5d & %9.3e & %9.3e & --------- \\\\" % (n,h[i-1],e))    
     print(" "); 
     
 ############################################################################
-    
+  
 main()
 
