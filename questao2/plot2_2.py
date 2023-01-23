@@ -4,8 +4,9 @@
 
 # plots for general explicit one-Step methods.
 
-# 1- (manufactured) problem with kwnown exact solution 
-#              y' = y-t²+1, 0<=t<=2, y(0)=1/2
+# 2- (manufactured) problem with kwnown exact solution 
+#            (1) I1' = -4I1 + 3I2 + 6, I1(0) = 0
+#            (2) I2' = -2.4I1 + 1.6I2 + 3.6, I2(0) = 0
                          
 
 import matplotlib.pyplot as plt
@@ -20,19 +21,19 @@ def phi(t,y,f):
 ############################################################################
 
 def f(t, y):
-    # unidimensional problem
-        
-    f0 =  y[0] - t**2 + 1
+   # bidimensional problem
+    f0 = -4*y[0] + 3*y[1] + 6
+    f1 = -2.4*y[0] + 1.6*y[1] + 3.6
     
-    return np.array([f0])
+    return np.array([f0, f1])
 
 ############################################################################
 
 # other relevant data
-t_n_1 = [0]; t_n_2 = [0]; t_n_3 = [0]; T = 2;        # time interval: t in [t0,T]
-y_n_1 = [np.array([0.5])]; y_n_2 = [np.array([0.5])]; y_n_3 = [np.array([0.5])];  # initial condition
+t_n_1 = [0]; t_n_2 = [0]; T = 1;        # time interval: t in [t0,T]
+y_n_1 = [np.array([0, 0])]; y_n_2 = [np.array([0, 0])]; # initial condition
 
-n_1 = 2                 # time interval partition (discretization)
+n_1 = 16                # time interval partition (discretization)
 dt = (T-t_n_1[-1])/n_1
 while t_n_1[-1] < T:
     y_n_1.append(y_n_1[-1] + dt*phi(t_n_1[-1],y_n_1[-1],f))
@@ -41,7 +42,7 @@ while t_n_1[-1] < T:
 
 y_n_1 = np.array(y_n_1)
 
-n_2 = 16                # time interval partition (discretization)
+n_2 = 256                # time interval partition (discretization)
 dt = (T-t_n_2[-1])/n_2
 while t_n_2[-1] < T:
     y_n_2.append(y_n_2[-1] + dt*phi(t_n_2[-1],y_n_2[-1],f))
@@ -50,18 +51,11 @@ while t_n_2[-1] < T:
 
 y_n_2 = np.array(y_n_2)
 
-n_3 = 256                # time interval partition (discretization)
-dt = (T-t_n_3[-1])/n_3
-while t_n_3[-1] < T:
-    y_n_3.append(y_n_3[-1] + dt*phi(t_n_3[-1],y_n_3[-1],f))
-    t_n_3.append(t_n_3[-1] + dt)
-    dt = min(dt, T-t_n_3[-1])
+plt.plot(t_n_1, y_n_1[:,0], 'k--', label = 'I1(t)  n = 16')
+plt.plot(t_n_2, y_n_2[:,0], 'k-', label = 'I1(t)  n = 256')
 
-y_n_3 = np.array(y_n_3)
-
-plt.plot(t_n_1, y_n_1[:], 'k:', label = 'y(t)  n = 2')
-plt.plot(t_n_2, y_n_2[:], 'k--', label = 'y(t)  n = 16')
-plt.plot(t_n_3, y_n_3[:], 'k-', label = 'y(t)   n = 256')
+plt.plot(t_n_1, y_n_1[:,1], 'k:', label = 'I2(t)  n = 16')
+plt.plot(t_n_2, y_n_2[:,1], 'k-.', label = 'I2(t)   n = 256')
 
 plt.xlabel('time t   (in t units)')
 plt.ylabel('y  state variables')
