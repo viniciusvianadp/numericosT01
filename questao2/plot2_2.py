@@ -30,8 +30,9 @@ def f(t, y):
 ############################################################################
 
 # other relevant data
-t_n_1 = [0]; t_n_2 = [0]; T = 1;        # time interval: t in [t0,T]
-y_n_1 = [np.array([0, 0])]; y_n_2 = [np.array([0, 0])]; # initial condition
+t_n_1 = [0]; t_n_2 = [0]; t_n_3 = [0]; T = 1;        # time interval: t in [t0,T]
+y_n_1 = [np.array([0, 0])]; y_n_2 = [np.array([0, 0])];
+y_n_3 = [np.array([0, 0])]; # initial condition
 
 n_1 = 16                # time interval partition (discretization)
 dt = (T-t_n_1[-1])/n_1
@@ -42,7 +43,7 @@ while t_n_1[-1] < T:
 
 y_n_1 = np.array(y_n_1)
 
-n_2 = 256                # time interval partition (discretization)
+n_2 = 64                # time interval partition (discretization)
 dt = (T-t_n_2[-1])/n_2
 while t_n_2[-1] < T:
     y_n_2.append(y_n_2[-1] + dt*phi(t_n_2[-1],y_n_2[-1],f))
@@ -51,14 +52,38 @@ while t_n_2[-1] < T:
 
 y_n_2 = np.array(y_n_2)
 
-plt.plot(t_n_1, y_n_1[:,0], 'k--', label = 'I1(t)  n = 16')
-plt.plot(t_n_2, y_n_2[:,0], 'k-', label = 'I1(t)  n = 256')
+n_3 = 128                # time interval partition (discretization)
+dt = (T-t_n_3[-1])/n_3
+while t_n_3[-1] < T:
+    y_n_3.append(y_n_3[-1] + dt*phi(t_n_3[-1],y_n_3[-1],f))
+    t_n_3.append(t_n_3[-1] + dt)
+    dt = min(dt, T-t_n_3[-1])
 
-plt.plot(t_n_1, y_n_1[:,1], 'k:', label = 'I2(t)  n = 16')
-plt.plot(t_n_2, y_n_2[:,1], 'k-.', label = 'I2(t)   n = 256')
+y_n_3 = np.array(y_n_3)
+
+
+## plotting the graphic for I1
+plt.plot(t_n_1, y_n_1[:,0], 'k:', label = 'n = 16')
+plt.plot(t_n_2, y_n_2[:,0], 'k--', label = 'n = 64')
+plt.plot(t_n_3, y_n_3[:,0], 'k-', label = 'n = 128')
+
 
 plt.xlabel('time t   (in t units)')
-plt.ylabel('y  state variables')
-plt.title('Numerical Approximation of State Variables')
+plt.ylabel('state variable I1')
+plt.title('Numerical Approximation of State Variable I1')
 plt.legend()
 plt.show()
+
+## plotting the graphic for I2
+plt.plot(t_n_1, y_n_1[:,1], 'k:', label = 'n = 16')
+plt.plot(t_n_2, y_n_2[:,1], 'k--', label = 'n = 64')
+plt.plot(t_n_3, y_n_3[:,1], 'k-', label = 'n = 128')
+
+
+plt.xlabel('time t   (in t units)')
+plt.ylabel('state variable I2')
+plt.title('Numerical Approximation of State Variable I2')
+plt.legend()
+plt.show()
+
+
