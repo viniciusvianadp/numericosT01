@@ -68,9 +68,9 @@ plt.plot(t_n_2, y_n_2[:,0], 'k--', label = 'n = 64')
 plt.plot(t_n_3, y_n_3[:,0], 'k-', label = 'n = 128')
 
 
-plt.xlabel('time t   (in t units)')
-plt.ylabel('state variable y1')
-plt.title('Numerical Approximation of State Variable y1')
+plt.xlabel('t   (em unidade de tempo)')
+plt.ylabel('y1(t)  (em unidade de y1)')
+plt.title('Aproximação Numérica da Variável de Estado y1')
 plt.legend()
 plt.show()
 
@@ -80,33 +80,8 @@ plt.plot(t_n_2, y_n_2[:,1], 'k--', label = 'n = 64')
 plt.plot(t_n_3, y_n_3[:,1], 'k-', label = 'n = 128')
 
 
-plt.xlabel('time t   (in t units)')
-plt.ylabel('state variable y2')
-plt.title('Numerical Approximation of State Variable y2')
+plt.xlabel('t   (em unidade de tempo)')
+plt.ylabel('y2(t)  (em unidade de y2)')
+plt.title('Aproximação Numérica da Variável de Estado y2')
 plt.legend()
 plt.show()
-
-
-## exact vs approximated (y1)
-t = np.linspace(0, 1, 128)
-plt.plot(t, 0.2*np.exp(2*t)*(np.sin(t) - 2*np.cos(t)), 'k-', label = 'exact')
-plt.plot(t_n_3, y_n_3[:, 0], 'k--', label = 'approximated')
-
-plt.xlabel('time t  (in t units)')
-plt.ylabel('y1(t)  (in y1 units)')
-plt.title('Comparison between approximated and exact solution')
-plt.legend()
-plt.show()
-
-## exact vs approximated (y2)
-t = np.linspace(0, 1, 128)
-plt.plot(t, 0.8*np.exp(2*t)*np.sin(t) - 0.6*np.exp(2*t)*np.cos(t), 'k-', label = 'exact')
-plt.plot(t_n_3, y_n_3[:, 1], 'k--', label = 'approximated')
-
-plt.xlabel('time t  (in t units)')
-plt.ylabel('y2(t)  (in y2 units)')
-plt.title('Comparison between approximated and exact solution')
-plt.legend()
-plt.show()
-
-
