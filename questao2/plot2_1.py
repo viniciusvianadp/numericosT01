@@ -61,13 +61,24 @@ while t_n_3[-1] < T:
 y_n_3 = np.array(y_n_3)
 
 
-
+## y for different values of n
 plt.plot(t_n_1, y_n_1[:], 'k:', label = 'n = 16')
 plt.plot(t_n_2, y_n_2[:], 'k--', label = 'n = 64')
 plt.plot(t_n_3, y_n_3[:], 'k-', label = 'n = 128')
 
-plt.xlabel('time t   (in t units)')
-plt.ylabel('state variable y (in y units)')
+plt.xlabel('time t  (in t units)')
+plt.ylabel('state variable y  (in y units)')
 plt.title('Numerical Approximation of State Variable y(t)')
+plt.legend()
+plt.show()
+
+## exact vs approximated
+t = np.linspace(0, 2, 128)
+plt.plot(t, (t+1)**2 -  0.5*np.exp(t), 'k-', label = 'exact')
+plt.plot(t_n_3, y_n_3[:], 'k--', label = 'approximated')
+
+plt.xlabel('time t  (in t units)')
+plt.ylabel('y(t)  (in y units)')
+plt.title('Comparison between approximated and exact solution')
 plt.legend()
 plt.show()

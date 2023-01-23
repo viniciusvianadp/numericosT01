@@ -5,7 +5,7 @@
 # general explicit one-Step methods and convergence tests implementation.
 
 # (manufactured) problem with kwnown exact solution 
-#              y"-2y'+2y = (e^t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
+#              y"-2y'+2y = (e^2t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
                          
 import math
 import numpy as np

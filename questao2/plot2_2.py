@@ -86,4 +86,27 @@ plt.title('Numerical Approximation of State Variable I2')
 plt.legend()
 plt.show()
 
+## exact vs approximated (I1)
+t = np.linspace(0, 1, 128)
+plt.plot(t, -3.375*np.exp(-2*t) + 1.875*np.exp(-0.4*t) + 1.5, 'k-', label = 'exact')
+plt.plot(t_n_3, y_n_3[:, 0], 'k--', label = 'approximated')
+
+plt.xlabel('time t  (in t units)')
+plt.ylabel('I1(t)  (in I1 units)')
+plt.title('Comparison between approximated and exact solution')
+plt.legend()
+plt.show()
+
+## exact vs approximated (I2)
+t = np.linspace(0, 1, 128)
+plt.plot(t, -2.25*np.exp(-2*t) + 2.25*np.exp(-0.4*t), 'k-', label = 'exact')
+plt.plot(t_n_3, y_n_3[:, 1], 'k--', label = 'approximated')
+
+plt.xlabel('time t  (in t units)')
+plt.ylabel('I2(t)  (in I2 units)')
+plt.title('Comparison between approximated and exact solution')
+plt.legend()
+plt.show()
+
+
 

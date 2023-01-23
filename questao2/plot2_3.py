@@ -5,7 +5,7 @@
 # plots for general explicit one-Step methods.
 
 # 3- (manufactured) problem with kwnown exact solution 
-#              y"-2y'+2y = (e^t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
+#              y"-2y'+2y = (e^2t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
                          
 
 import matplotlib.pyplot as plt
@@ -30,7 +30,7 @@ def f(t, y):
 ############################################################################
 
 # other relevant data
-t_n_1 = [0]; t_n_2 = [0]; t_n_3 = [0]; T = 1;        # time interval: t in [t0,T]
+t_n_1 = [0]; t_n_2 = [0]; t_n_3 = [0];  T = 1;        # time interval: t in [t0,T]
 y_n_1 = [np.array([-0.4, -0.6])]; y_n_2 = [np.array([-0.4, -0.6])];
 y_n_3 = [np.array([-0.4, -0.6])]; # initial condition
 
@@ -85,4 +85,28 @@ plt.ylabel('state variable y2')
 plt.title('Numerical Approximation of State Variable y2')
 plt.legend()
 plt.show()
+
+
+## exact vs approximated (y1)
+t = np.linspace(0, 1, 128)
+plt.plot(t, 0.2*np.exp(2*t)*(np.sin(t) - 2*np.cos(t)), 'k-', label = 'exact')
+plt.plot(t_n_3, y_n_3[:, 0], 'k--', label = 'approximated')
+
+plt.xlabel('time t  (in t units)')
+plt.ylabel('y1(t)  (in y1 units)')
+plt.title('Comparison between approximated and exact solution')
+plt.legend()
 plt.show()
+
+## exact vs approximated (y2)
+t = np.linspace(0, 1, 128)
+plt.plot(t, 0.8*np.exp(2*t)*np.sin(t) - 0.6*np.exp(2*t)*np.cos(t), 'k-', label = 'exact')
+plt.plot(t_n_3, y_n_3[:, 1], 'k--', label = 'approximated')
+
+plt.xlabel('time t  (in t units)')
+plt.ylabel('y2(t)  (in y2 units)')
+plt.title('Comparison between approximated and exact solution')
+plt.legend()
+plt.show()
+
+
