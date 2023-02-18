@@ -1,0 +1,405 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc, amsmath, graphicx,circuitikz, amsfonts}
+\graphicspath{{images/}}
+\renewcommand{\thesection}{\Roman{section}.}
+\renewcommand{\thesubsection}{\thesection ~\alph{subsection}.}
+\renewcommand{\thesubsubsection}{\thesubsection ~\arabic{subsubsection}.}
+
+\title{\textbf{Utilização do Método de Euler para a obtenção da solução de um problema escalar e um problema bidimensional}}
+ 
+ 
+\date{}
+
+\begin{document}
+
+\maketitle
+\begin{subtitle}
+  \vspace{-1.8cm}
+  \centering
+  Keith Ando Ogawa
+ 
+  keith.ando@usp.br
+  
+  Vinícius Viana de Paula
+  
+  viniciusviana@usp.br
+  
+  \vspace{0.2cm}
+  23 de Janeiro de 2023
+  
+  Escola Politécnica da Universidade de São Paulo
+
+  Descrição e análise propostas pela tarefa 01 da disciplina MAP3122
+  
+  \vspace{0.7cm}
+  Neste documento será apresentada a implementação do Método de Euler, utilizando inicialmente um problema unidimensional e outro bidimensional, por meio da estratégia da solução manufaturada, para verificar se o método foi corretamente implementado. Por fim, será obtida uma solução para outro problema bidimensional, cuja solução é desconhecida, supostamente.
+\end{subtitle}
+\newpage
+
+
+\section{Introdução}
+
+    \hspace{1cm}Nota-se que inúmeros problemas não apresentam soluções exatas, como o de descrição de sistemas biológicos da equação de Lotka-Volterra, portanto, é necessário utilizarmos processos para obter soluções aproximadas. Nesse documento, ilustramos um dos métodos para obter soluções numéricas de equações diferenciais, o Método de Euler. Primeiro é verificado que ele é adequado, para problemas unidimensionais e bidimensionais, a partir da estratégia da solução manufaturada. E então, é testado o método para um problema bidimensional de solução desconhecida. 
+
+\section{Modelo Matemático}
+    \subsection{Problema com uma variável de estado e solução exata conhecida}
+     \hspace{0.7cm}O Problema de Cauchy unidimensional estudado é dado por
+         \begin{equation}
+            \.y = y - t^2 + 1
+            \label{problem1}
+        \end{equation}
+\[ 0\leq t \leq 2, ~y(0)=\frac{1}{2} ~~\]
+      cuja solução exata é dada por 
+      \begin{equation}
+      y(t) = -\frac{1}{2}e^t + (1 + t)^2.
+         \label{exactsol1}
+      \end{equation}
+
+    \subsection{Problema com duas variáveis de estado e solução conhecida}
+
+    \hspace{0.7cm}A partir do circuito da figura \ref{circuitoRLC1}, utilizando Lei das Malhas, obtém-se um sistema de equações diferenciais, em (\ref{circuit1}) - sendo que as correntes \(I_1\) e \(I_2\) representam as correntes dos dois laços internos:
+        
+     \begin{equation}
+         \begin{cases}
+    \dot I_1 = -4I_1 + 3I_2 + 6, ~I_1(0) = 0 \\
+    \dot I_2 = -2.4I_1 + 1.6I_2 + 3.6, ~I_2(0) = 0
+         \end{cases}
+         \label{circuit1}
+    \end{equation}
+    
+    \hspace{0.2cm}Para o problema, o instante de tempo t pertence ao intervalo \(\mathbb{I} = [0, 1]\).
+    
+    Assim, o problema de Cauchy dado por (\ref{circuit1}) é um sistema bidimensional com 
+    \begin{equation}
+    \mathbb{Y} = \begin{pmatrix} I_1(t) \\ I_2(t) \end{pmatrix},
+    \end{equation}
+    \begin{equation}
+    \mathbb{\.Y} = f(t,\mathbb{Y}) = f(t, I_1(t), I_2(t)) 
+       = \begin{pmatrix} f_1(t, I_1(t), I_2(t)) \\ f_2(t, I_1(t), I_2(t)) \end{pmatrix}
+       = \begin{pmatrix} -4I_1 + 3I_2 + 6 \\ -2.4I_1 + 1.6I_2 + 3.6 \end{pmatrix},
+    \end{equation}
+    com condições iniciais \(I_1(0) = 0\) e \(I_2(0) = 0\), 0 \leq t \leq 1. 
+
+    \vspace{1cm}
+    
+    Esse problema apresenta solução exata dada por
+    \begin{equation}
+    \mathbb{Y}(t_k) = \begin{pmatrix} I_1(t_k) \\ I_2(t_k) \end{pmatrix} = \begin{pmatrix} -3.375e^{-2t} + 1.875e^{-0.4t} + 1.5 \\ -2.25e^{-2t} + 2.25e^{-0.4t} \end{pmatrix}.
+    \end{equation}
+
+        \begin{figure}[h]
+        \begin{circuitikz} \draw
+        (0,0) to[battery,v= 12 V] (0,2.5)
+        to[cspst, l=$t_0$]  (0,3) -- (0,4)
+        to[R,l = $2~\Omega$] (4,4) to[R,l = $6~\Omega$ ] (4,0)
+        (4,4) to[capacitor,l = 0.5 F ] (8,4)
+        (8,4) to[R,l = $4~\Omega$ ] (8,0)
+        (8,0) -- (4,0)
+        to[inductor, L = 2 H] (0,0)
+        \end{circuitikz}
+        \caption{Circuito RLC utilizado na descrição do problema}
+        \label{circuitoRLC1}
+        \end{figure}
+    
+    
+    \subsection{Problema com duas variáveis de estado e solução desconhecida}
+    
+     \hspace{1cm}O segundo Problema de Cauchy, bidimensional, entretanto com solução considerada desconhecida estudado é dado por:
+        \begin{equation}
+      \ddot y-2\.y+2y = e^{2t} sin(t) \\
+         \label{problem3}
+        \end {equation}
+        
+      \[ 0\leq t \leq 1, ~y(0)=-0.4 , ~\dot y(0)=-0.6 ~~\]
+      
+\newpage
+
+
+\section{Metodologia Numérica}
+        \subsection{Método de Euler}
+        
+        \hspace{0.7cm}Dado um Problema de Cauchy que satisfaz as hipóteses do Teorema de Existência e Unicidade, é possível construir um problema aproximado, que, para as soluções numéricas, será obtido discretizando o problema original. A solução aproximada é, então, determinada em um conjunto discreto de pontos.
+        
+        Utilizando a estratégia da aproximação do Problema de Cauchy por Taylor,
+representando a solução exata pelo seu polinômio de Taylor:
+        \begin{equation}
+         y(t_k + h) = y(t_k) + hy^{(1)}(t_k) + \frac{h^2}{2!}y^{(2)}(t_k) + ... + R(\xi),
+          \label{Taylor}
+         \end{equation}
+         em que \(R(\xi)\) é o erro de Lagrange, e h é o passo de integração definido para o problema discretizado.
+
+         A equação (\ref{Taylor}) pode ser reescrita - para valores de h suficientemente pequenos, e adotando \(t_k + h = t_{k+1}\) - como
+         \begin{equation}
+              \frac{y(t_{k+1}) - y(t_k)}{h} \approx y^{(1)}(t_k) = f(t_k, y(t_k)). 
+              \label{Taylor_approximation}
+         \end{equation}
+
+        A partir da equação (\ref{Taylor_approximation}), é obtido o Método de Euler:
+        \begin{equation}
+        \begin{cases}
+         \.y \doteq y(t_0) ~~ \\
+         y_k+1 = y_k + h\phi(t_k,y_k,h), 0 \leq k \leq  n - 1 ~~
+           \end{cases}
+           \end{equation}
+           \hspace{1cm}onde  \[ h = \frac{(b-a)}{n} \; \; e \; \; \phi(t_k,y_k,h) \doteq f(t_k,y_k)\]
+        \hspace{1cm}
+
+        A solução numérica é uma aproximação da solução exata em um conjunto de pontos finito, de modo que existem erros locais e globais provenientes da discretização. Em particular, o erro de discretização global, que será utilizado para estudar a aplicação do Método de Euler nos problemas escolhidos, é dado, em um instante \(t = t_k\), por
+                \begin{equation}
+                    e(t_k, h) = e_k = y(t_k) - y_k,
+                \end{equation}
+        em que y(t) é a solução exata do Problema de Cauchy e \(y_k\) é o k-ésimo passo de integração do método numérico para este problema.
+
+\section{Resultados}
+      \subsection{Problemas cujas soluções são conhecidas}
+         \subsubsection{Problema unidimensional}
+             \hspace{0.7cm}Sendo dado o Problema de Cauchy descrito em (\ref{problem1}), unidimensional, que apresenta solução exata, dada em (\ref{exactsol1}), e que será utilizado na depuração via estratégia da solução manufaturada.
+
+             \begin{table}[!ht]
+    \centering
+    \begin{tabular}{rccc}
+    \hline\hline\\
+          $n$ & $h_n=\displaystyle \frac{(T-t_0)}{n}$ 
+              & $\left|e(T, h_n)\right|$  & ordem $p$\\\\
+   \hline\hline\\
+
+   16 & 1.250e-01 & 2.950e-01 & --------- \\
+   32 & 6.250e-02 & 1.572e-01 & 9.079e-01 \\
+   64 & 3.125e-02 & 8.131e-02 & 9.514e-01 \\
+  128 & 1.562e-02 & 4.136e-02 & 9.750e-01 \\
+  256 & 7.812e-03 & 2.086e-02 & 9.873e-01 \\
+  512 & 3.906e-03 & 1.048e-02 & 9.936e-01 \\
+ 1024 & 1.953e-03 & 5.251e-03 & 9.968e-01 \\
+ 2048 & 9.766e-04 & 2.628e-03 & 9.984e-01 \\
+ 4096 & 4.883e-04 & 1.315e-03 & 9.992e-01 \\
+ 8192 & 2.441e-04 & 6.577e-04 & 9.996e-01 \\
+16384 & 1.221e-04 & 3.289e-04 & 9.998e-01 \\
+32768 & 6.104e-05 & 1.644e-04 & 9.999e-01 \\
+65536 & 3.052e-05 & 8.223e-05 & 9.999e-01 \\
+   
+   \hline\hline \end{tabular}
+   \caption{Tabela de Convergência Numérica para o problema unidimensional proposto utilizando o método de Euler.}
+   \label{tabela1}
+\end{table}
+    \hspace{0.2cm}Esse problema será utilizado para verificar a implementação do Método de Euler, que é um método de ordem 1. A tabela~\ref{tabela1}, de convergência numérica, apresenta o número de passos, o passo de integração, o erro de discretização global no instante de tempo final e a ordem exibida ao aproximar o passo de integração à zero.
+    
+    \hspace{0.3cm}Para a obtenção do erro de discretização global no instante de tempo final \(t_f\), foi construída uma aproximação numérica \(y_n(t_f, h_n)\) da solução exata \(y_e(t_f)\) utilizando o Método de Euler, de modo que 
+       \begin{equation}
+       |e(t_f,h_n)| = |y_e(t_f) - y_n(t_f, h_n)|.
+       \end{equation}
+    \hspace{1cm}O erro de discretização global, apresentado na terceira coluna da tabela \ref{tabela1}, é utilizado para a obtenção da ordem p do método, através da relação
+
+    \begin{equation}
+    p \approx log_r\frac{|e(t_f,h_{n-1})|}{|e(t_f, h_n)|}, 
+    \label{ordemp}
+    \end{equation}
+    \hspace{0.4cm}em que r é a razão entre dois passos de integração consecutivos, 
+    
+    \begin{figure}[h]
+       \includegraphics[width=11cm]{images/grafico2_1.png}
+       \caption{Gráfico y vs t com diferentes valores de n.}
+       \label{grafico2.1}
+    \end{figure}
+    
+    \begin{equation}
+    r = \frac{h_{n-1}}{h_n}.
+    \end{equation}
+    \hspace{0.8cm}Analisando a quarta coluna da tabela~\ref{tabela1}, é possível perceber o comportamento do Método de Euler, já que p tende à 1 para valores de h cada vez mais próximos de zero.
+
+    \hspace{0.2cm}A figura \ref{grafico2.1} mostra a solução para a variável de estado y(t), variando os valores de n. Analisando a figura, é possível observar que à medida que se aumenta o valor de n, o que diminui o passo de integração, \(h_n\), as soluções se sobrepõem. 
+
+     \begin{figure}[h]
+       \includegraphics[width=11cm]{images/exatavsapprox2_1.png}
+       \caption{Gráfico y vs t das soluções exata e aproximada para n = 128.}
+       \label{exactvsapprox2.1}
+    \end{figure}
+
+    Por sua vez, a figura \ref{exactvsapprox2.1} apresenta as soluções exata e numérica para o problema, possibilitando uma comparação entre as duas soluções. A partir da figura \ref{exactvsapprox2.1}, é possível perceber que a solução numérica se aproxima da solução exata do problema.
+
+            \subsubsection{Problema bidimensional}
+
+             \begin{table}[!ht]
+    \centering
+    \begin{tabular}{rccc}
+    \hline\hline\\
+          $n$ & $h_n=\displaystyle \frac{(T-t_0)}{n}$ 
+              & $\left|e(T, h_n)\right|$  & ordem $p$\\\\
+   \hline\hline\\
+
+   16 & 6.250e-02 & 5.191e-02 & --------- \\
+   32 & 3.125e-02 & 2.568e-02 & 1.015e+00 \\
+   64 & 1.562e-02 & 1.277e-02 & 1.008e+00 \\
+  128 & 7.812e-03 & 6.368e-03 & 1.004e+00 \\
+  256 & 3.906e-03 & 3.180e-03 & 1.002e+00 \\
+  512 & 1.953e-03 & 1.589e-03 & 1.001e+00 \\
+ 1024 & 9.766e-04 & 7.942e-04 & 1.000e+00 \\
+ 2048 & 4.883e-04 & 3.970e-04 & 1.000e+00 \\
+ 4096 & 2.441e-04 & 1.985e-04 & 1.000e+00 \\
+ 8192 & 1.221e-04 & 9.924e-05 & 1.000e+00 \\
+16384 & 6.104e-05 & 4.962e-05 & 1.000e+00 \\
+32768 & 3.052e-05 & 2.481e-05 & 1.000e+00 \\
+65536 & 1.526e-05 & 1.240e-05 & 1.000e+00 \\
+
+   
+   \hline\hline \end{tabular}
+   \caption{Tabela de Convergência Numérica para o problema bidimensional proposto utilizando o método de Euler e seguindo a norma do máximo para o cálculo do erro e da ordem p .}
+   \label{tabela2}
+\end{table}
+
+               \hspace{0.7cm}O problema bidimensional utilizado para a depuração via estratégia da solução manufaturada, é descrito em (\ref{circuit1}).
+               
+            A coluna \(|e(T,h_n)|\) da tabela \ref{tabela2} descreve o erro de discretização global, que é dado por
+           \begin{equation}
+           e(t_k, y_k) \doteq e_k \doteq \mathbb{Y}(t_k) - \mathbb{Y}_k 
+           \end{equation}
+    onde \(\mathbb{Y}_k\) é o k-ésimo passo de integração do método numérico. Dado que o problema é bidimensional, o erro de discretização global pode ser obtido a partir da norma do máximo:
+    \begin{equation}
+       \begin{cases}
+        e_1 = I_1(t_k) - I_{1,k} \\
+        e_2 = I_2(t_k) - I_{2,k}  \\
+        |e(t, h)| = max(|e_1|, |e_2|)
+        \end{cases}
+        \label{globalerror}
+    \end{equation}    
+     \begin{figure}[h]
+       \includegraphics[width=11cm]{images/grafico2_2_i1.png}
+       \caption{Gráfico \(I_1\) vs t com diferentes valores de n.}
+       \label{grafico2.2i1}
+    \end{figure} 
+    \newpage
+    em que \(I_{i,k}\) representa o valor obtido pelo método numérico, enquanto \(I_i(t_k)\) representa o valor da solução exata.
+    
+    
+     O valor de p continua sendo obtido pela equação (\ref{ordemp}), sendo que o erro de discretização global para cada instante de tempo \(t_k\) é obtido como descrito em (\ref{globalerror}).
+     
+     A tabela~\ref{tabela2}, de convergência numérica, exibe o número de passos de cada iteração, o passo de integração, o erro de discretização global e a ordem exibida ao aproximar o passo de integração a zero. Nota-se o comportamento do Método de Euler, visto que, conforme h tende a zero, a ordem p tende a um.
+   
+
+     As figuras \ref{grafico2.2i1} e \ref{grafico2.2i2} apresentam gráficos com a solução para cada variável de estado, \(I_1(t)\) e \(I_2(t)\), para diferentes valores de n.
+
+    Novamente, é possível perceber que para menores valores do passo de integração, \(h_n\), obtidos aumentando o valor de n, as soluções se sobrepõem.
+    
+     \begin{figure}
+       \includegraphics[width=11cm]{images/grafico2_2_i2.png}
+       \caption{Gráfico \(I_2\) vs t com diferentes valores de n.}
+       \label{grafico2.2i2}
+    \end{figure}
+
+     \begin{figure}
+       \includegraphics[width=11cm]{images/exatavsapproxi1.png}
+       \caption{Gráfico \(I_1\) vs t das soluções exata e aproximada para n = 128.}
+       \label{exactvsapprox2.2i1}
+    \end{figure}
+
+    \begin{figure}
+       \includegraphics[width=11cm]{images/exatavsapproxi2.png}
+       \caption{Gráfico \(I_2\) vs t das soluções exata e aproximada para n = 128.}
+       \label{exactvsapprox2.2i2}
+    \end{figure}
+
+    As figuras \ref{exactvsapprox2.2i1} e \ref{exactvsapprox2.2i2} apresentam as soluções exatas e as numéricas para o problema. É possível ver que a solução numérica também se aproxima da solução exata do problema para o caso bidimensional.
+ 
+       \subsection{Resolução de um problema bidimensional com solução desconhecida}
+
+           \begin{table}[!ht]
+    \centering
+    \begin{tabular}{rccc}
+    \hline\hline\\
+          $n$ & $h_n=\displaystyle \frac{(T-t_0)}{n}$ 
+              & $\left|e(T, h_n)\right|$  & ordem $p$\\\\
+   \hline\hline\\
+
+   64 & 1.562e-02 & 2.452e-02 & 9.157e-01 \\
+  128 & 7.812e-03 & 6.491e-03 & 9.587e-01 \\
+  256 & 3.906e-03 & 1.669e-03 & 9.796e-01 \\
+  512 & 1.953e-03 & 4.233e-04 & 9.899e-01 \\
+ 1024 & 9.766e-04 & 1.066e-04 & 9.949e-01 \\
+ 2048 & 4.883e-04 & 2.673e-05 & 9.975e-01 \\
+ 4096 & 2.441e-04 & 6.695e-06 & 9.987e-01 \\
+ 8192 & 1.221e-04 & 1.675e-06 & 9.994e-01 \\
+16384 & 6.104e-05 & 4.190e-07 & 9.997e-01 \\
+32768 & 3.052e-05 & 1.048e-07 & 9.998e-01 \\
+65536 & 1.526e-05 & 2.620e-08 & 9.999e-01 \\
+
+   
+   \hline\hline 
+   \end{tabular}
+   
+   \caption{Tabela de Convergência Numérica para o problema bidimensional proposto utilizando o método de Euler e seguindo a norma euclidiana para o cálculo do erro e da ordem p .}
+   \label{tabela3}
+\end{table}
+
+       \hspace{0.7cm}Utiliza-se novamente o Método de Euler para obter, numericamente, uma solução aproximada para o problema apresentado em (\ref{problem3}). Diferentemente das análises anteriores, entretanto, a solução exata desse problema é supostamente desconhecida. Portanto, a obtenção do erro de discretização global e da ordem p são abordadas outro modo.
+       
+       \hspace{0.2cm}O erro e a ordem p do método podem ser estimados sem a presença de uma solução exata, a partir da ordem teórica p do método, e de soluções numéricas \(\eta \) com passos de integração h sucessivos:
+       
+       \begin{equation}
+        |e(t,h/2)| \approx \frac{\eta(t,h) - \eta(t,h/2)}{2^p - 1} = \eta(t,h) - \eta(t,h/2),  
+       \end{equation}
+       
+       \begin{equation}
+        p \approx log_2\frac{\eta(t,2h) - \eta(t,h)}{\eta(t,h) - \eta(t,h/2)} = e(t,h) - e(t,h/2),  
+       \end{equation}
+
+        \hspace{0.2cm}Desse modo, a tabela \ref{tabela3} exibe o número de passos, o passo de integração, o erro de discretização global no instante de tempo final e a ordem exibida ao aproximar o passo de integração à zero. Observa-se que a ordem p também tende a 1 conforme h tende a 0, evidenciando o comportamento do Método de Euler.
+
+        \hspace{0.2cm}O problema de Cauchy dado por (\ref{problem3}) pode ser transformado em um sistema de duas equações de ordem 1: 
+
+         \begin{equation}
+            \begin{cases}
+               y_1(t) \doteq y(t) \Rightarrow \dot y_1(t) = \dot y(t) = y_2(t) \\
+               y_2 \doteq \dot y(t) \Rightarrow \dot y_2(t) = \ddot y(t) = 
+                   e^{2t}sin(t) - 2y_1(t) + 2y_2(t)   \\
+            \end{cases}
+         \end{equation}
+        
+        que é um sistema bidimensional descrito por
+    \begin{equation}
+    \mathbb{Y} = \begin{pmatrix} y_1(t) \\ y_2(t) \end{pmatrix},
+    \end{equation}
+    \begin{equation}
+    \mathbb{\.Y} = f(t,\mathbb{Y}) = f(t, y_1(t), y_2(t)) 
+       = \begin{pmatrix} f_1(t, y_1(t), y_2(t)) \\ f_2(t, y_1(t), y_2(t)) \end{pmatrix}
+       = \begin{pmatrix} y_2 \\ e^{2t}sin(t) - 2y_1 + 2y_2 \end{pmatrix},
+    \end{equation}
+    com condições iniciais \(y_1(0) = -0.4\) e \(y_2(0) = -0.6\). 
+    
+        \hspace{0.2cm}As figuras \ref{grafico2.3y1} e \ref{grafico2.3y2} apresentam os gráficos com as soluções para as variáveis de estado \(y_1(t)\) e \(y_2(t)\), para valores distintos de n. Nesse caso, as soluções também se sobrepõem ao se aumentar o valor de n, de modo que é possível identificar uma convergência à medida que o passo de integração se aproxima de zero.
+
+        \begin{figure}
+        \includegraphics[width=11cm]{images/grafico2_3_y1.png}
+        \caption{Gráfico y1 vs t com diferentes valores de n.}
+        \label{grafico2.3y1}
+        \end{figure}
+
+        \begin{figure}
+        \includegraphics[width=11cm]{images/grafico2_3_y2.png}
+        \caption{Gráfico y2 vs t com diferentes valores de n.}
+        \label{grafico2.3y2}
+        \end{figure}
+
+        \newpage
+
+    \section{Conclusão}
+    \hspace{0.7cm}Este trabalho analisou o Método de Euler explícito, de passo simples, através de um Problema de Cauchy bidimensional, cuja solução era desconhecida, e de dois problemas - um unidimensional e outro bidimensional - cujas soluções eram conhecidas. Verificou-se que o método é convergente, analisando a ordem do método para valores do passo de integração cada vez mais próximos de zero. Além disso, apresentação gráfica das soluções aproximadas e exatas para os problemas de solução conhecida demonstrou a aproximação da solução obtida pelo método numérico com a solução exata. 
+
+    \section{Apêndice}
+      \subsection{Estratégia da Solução Manufaturada}
+      \hspace{0.6cm}Trata-se de uma estratégia utilizada para verificar o quanto o método é, de fato, útil. Utilizando uma solução exata conhecida para um problema de valor inicial, o método é aplicado para esse problema e, então, as soluções aproximadas obtidas são comparadas com a solução exata.
+
+      \subsection{Implementação}
+    \hspace{0.7cm}A implementação técnica do estudo foi feito em Python, utilizando as bibliotecas MatPlot e NumPy. Para a verificação da integridade do método, foram implementadas, individualmente, em dois arquivos, formas de obter as soluções para um problema com uma variável de estado e para um problema com duas variáveis de estado. Nessas implementações, através da estratégia de solução manufaturada, comparamos a solução numérica e a solução exata, certificando que o método é válido. Finalmente, com a certeza da efetividade do método, obtivemos estimativas para a solução de um problema bidimensional cuja solução é desconhecida.
+    
+    \hspace{0.3cm}Para os três casos descritos, a estrutura do programa é semelhante, sendo composta de uma função \(\phi \) de discretização, uma função f utilizada para descrever o problema do valor inicial proposto e a função OneStepMethod que implementa o método de um passo (Euler) utilizado. Ademais, nos dois primeiros problemas há funções que descrevem as soluções exatas para fim de comparação.
+
+    \hspace{0.3cm}Dadas as demais funções, a função principal aplica a implementação proposta, inicializando os valores iniciais de cada caso e iterando com números de passos e tamanhos de passos de integração distintos para ser possível a análise feita com o erro e a ordem de convergência.
+\newpage
+
+    \section{Referências Bibliográficas}
+    \begin{itemize}
+        \item BURDEN, R. L.; FAIRES, J. D. {\itshape Numerical analysis.} Nona Edição.
+        \item Mathplotlib documentation at {\itshape https://matplotlib.org/stable/index.html}
+        \item Roma, A. L; Bevilacqua J. S. {\itshape Métodos para a solução numérica de equações diferenciais ordinárias a valores iniciais}
+    \end{itemize}
+
+\end{document}

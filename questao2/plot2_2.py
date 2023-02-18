@@ -1,5 +1,9 @@
+## 2023.01.23
+## Keith Ando Ogawa - keith.ando@usp.br
+## Vinícius Viana de Paula - viniciusviana@usp.br
 
-# MAP5725
+# MAP3122
+
 # based on Roma's program.
 
 # plots for general explicit one-Step methods.
