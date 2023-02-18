@@ -1,10 +1,14 @@
+## 2023.01.23
+## Keith Ando Ogawa - keith.ando@usp.br
+## Vinícius Viana de Paula - viniciusviana@usp.br
 
-# MAP5725
+# MAP3122
+
 # based on Roma's program.
 
 # general explicit one-Step methods and convergence tests implementation.
 
-# (manufactured) problem with kwnown exact solution 
+# problem with unkwnown exact solution 
 #              y"-2y'+2y = (e^2t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
                          
 import math
@@ -43,13 +47,6 @@ def oneStepMethod(t0, y0, T, n):
     
     return (T - t0) / n, y_n[-1]
 
-############################################################################
-
-def ye(t):
-    # exact solution 
-    return 0.2*math.exp(2*t)*(math.sin(t) - 2*math.cos(t))
-
-############################################################################
 ###########################################################################
 def main():
     # obtains the numerical convergence table based on parameters such as
@@ -62,28 +59,6 @@ def main():
     # input numerical method data
     m=13;  h=[0]*m;   # number of cases to run. Initialize list of time steps
     yn=[y0]*m;       # initialize list of approximations
-    print("MANUFACTURED SOLUTION VERIFICATION TABLE");
-
-    # case loop
-    for i in range(1,m+1): # run m times same code with h progressively small
-        n=16*2**(i-1);     # number of time steps in i-th case
-
-        h[i-1],yn[i-1]=oneStepMethod(t0,y0,T,n);
-
-        # verification via manufactured solution stragegy
-        # convergence table to verify the method correct implementation 
-        e=p=q=r=0;
-        if i>2:
-            q = abs((ye(T)-yn[i-2][0])/(ye(T)-yn[i-1][0]));
-            r = h[i-2]/h[i-1];
-
-            p = math.log(q)/math.log(r);
-
-            e = abs(ye(T)-yn[i-1][0])
-        print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p));
-
-    print(" ");
-
 
 
      # verification of the order without using/knowing the exact solution
@@ -95,6 +70,8 @@ def main():
         e=p=q=r=s1=s2=0;
         for i in range(1,m+1):
             n=16*2**(i-1); 
+
+            h[i-1],yn[i-1]=oneStepMethod(t0,y0,T,n);
             if i>2:
                 z3= np.array(yn[i-3])
                 z2 = np.array(yn[i-2])
@@ -107,8 +84,7 @@ def main():
             
                 p = math.log(q)/math.log(r);
             
-                e = (z2-z1)[0]**2 + (z2-z1)[1]**2;
-                print("%5d & %9.3e & %9.3e & %9.3e \\\\" % (n,h[i-1],e,p)); 
+                e = (z2-z1)[0]**2 + (z2-z1)[1]**2; 
                 file2.write("{:5d} & {:9.3e} & {:9.3e} & {:9.3e}\\\\\n".format(n,h[i-1],e,p))   
     
 ############################################################################
