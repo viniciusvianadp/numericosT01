@@ -7,6 +7,7 @@
 # general explicit one-Step methods and convergence tests implementation.
 
 # problem with unkwnown exact solution 
+# problem with unkwnown exact solution 
 #              y"-2y'+2y = (e^2t)*sin(t), 0<=t<=1, y(0) = -0.4, y'(0) = -0.6
                          
 import math
@@ -70,6 +71,8 @@ def main():
             n=16*2**(i-1); 
 
             h[i-1],yn[i-1]=oneStepMethod(t0,y0,T,n);
+
+            h[i-1],yn[i-1]=oneStepMethod(t0,y0,T,n);
             if i>2:
                 z3= np.array(yn[i-3])
                 z2 = np.array(yn[i-2])
@@ -82,6 +85,7 @@ def main():
             
                 p = math.log(q)/math.log(r);
             
+                e = (z2-z1)[0]**2 + (z2-z1)[1]**2; 
                 e = (z2-z1)[0]**2 + (z2-z1)[1]**2; 
                 file2.write("{:5d} & {:9.3e} & {:9.3e} & {:9.3e}\\\\\n".format(n,h[i-1],e,p))   
     
