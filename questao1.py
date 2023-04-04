@@ -1,6 +1,4 @@
 ## 2023.01.23
-## Keith Ando Ogawa - keith.ando@usp.br
-## Vinícius Viana de Paula - viniciusviana@usp.br
 
 import matplotlib.pyplot as plt ## to plot the graphics
 import numpy as np ## to use mathematical resources
